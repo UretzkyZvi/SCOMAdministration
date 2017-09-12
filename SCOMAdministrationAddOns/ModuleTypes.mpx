@@ -1,0 +1,261 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TypeDefinitions>
+    <ModuleTypes>
+      <ConditionDetectionModuleType ID="Event.LinkedDataMapper" Comment="Maps an event to a Entity Linked Event" Accessibility="Internal" Batching="false" Stateful="false" PassThrough="false">
+        <Configuration>
+          <xsd:element name="ManagedEntityId" type="xsd:string" />
+          <xsd:element name="RuleId" type="xsd:string" />
+        </Configuration>
+        <ModuleImplementation Isolation="Any">
+          <Native>
+            <ClassID>eae677d0-9d4f-11d9-9669-0800200c9a66</ClassID>
+          </Native>
+        </ModuleImplementation>
+        <OutputType>SC!Microsoft.SystemCenter.Event.LinkedData</OutputType>
+        <InputTypes>
+          <InputType>System!System.Event.Data</InputType>
+        </InputTypes>
+      </ConditionDetectionModuleType>
+
+
+      <WriteActionModuleType Accessibility="Public" ID="HealthServicesPingCheck">
+        <Configuration>
+           <xsd:element name="NetBIOSName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="PrincipalName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="ManagementServerName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="PingSamples" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="IntervalMilliseconds"  type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="TimeoutSeconds"  type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="NetBIOSName" Selector="$Config/NetBIOSName$" ParameterType="string" />
+          <OverrideableParameter ID="PrincipalName" Selector="$Config/PrincipalName$" ParameterType="string" />
+          <OverrideableParameter ID="ManagementServerName" Selector="$Config/ManagementServerName$" ParameterType="string" />
+          <OverrideableParameter ID="PingSamples" Selector="$Config/PingSamples$" ParameterType="int" />
+          <OverrideableParameter ID="IntervalMilliseconds" Selector="$Config/IntervalMilliseconds$" ParameterType="int" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <ProbeAction TypeID="Windows!Microsoft.Windows.PowerShellPropertyBagProbe" ID="PSScript">
+                <ScriptName>HealthServicesPingCheck.ps1</ScriptName>
+                <ScriptBody>$IncludeFileContent/Scripts/HealthServicesPingCheck.ps1$</ScriptBody>
+                <Parameters>
+                  <Parameter>
+                    <Name>NetBIOSName</Name>
+                    <Value>$Config/NetBIOSName$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>PrincipalName</Name>
+                    <Value>$Config/PrincipalName$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ManagementServerName</Name>
+                    <Value>$Config/ManagementServerName$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>PingSamples</Name>
+                    <Value>$Config/PingSamples$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>IntervalMilliseconds</Name>
+                    <Value>$Config/IntervalMilliseconds$</Value>
+                  </Parameter>
+                </Parameters>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </ProbeAction>
+              <ConditionDetection ID="Mapper" TypeID="System!System.Event.GenericDataMapper">
+                <EventOriginId>$Target/Id$</EventOriginId>
+                <PublisherId>$MPElement$</PublisherId>
+                <PublisherName>ServerConnectivityCheck</PublisherName>
+                <Channel>Application</Channel>
+                <LoggingComputer>$Data/Property[@Name='ManagementServerName']$</LoggingComputer>
+                <EventNumber>100</EventNumber>
+                <EventCategory>3</EventCategory>
+                <EventLevel>0</EventLevel>
+                <UserName />
+                <Params>
+                  <Param>$Data/Property[@Name='Status']$</Param>
+                  <Param>$Data/Property[@Name='StatusCode']$</Param>
+                  <Param>$Data/Property[@Name='ResponseTime']$</Param>
+                  <Param>$Data/Property[@Name='AgentServerName']$</Param>
+                  <Param>$Data/Property[@Name='ManagementServerName']$</Param>
+                </Params>
+              </ConditionDetection>
+              <ConditionDetection TypeID="Event.LinkedDataMapper" ID="LinkedDataMapper">
+                <ManagedEntityId>$Target/Id$</ManagedEntityId>
+                <RuleId>$MPElement$</RuleId>
+              </ConditionDetection>
+              <WriteAction TypeID="SC!Microsoft.SystemCenter.CollectEvent" ID="EventWA" />
+            </MemberModules>
+            <Composition>
+              <Node ID="EventWA">
+                <Node ID="LinkedDataMapper">
+                  <Node ID="Mapper">
+                    <Node ID="PSScript" />
+                  </Node>
+                </Node>
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <InputType>System!System.BaseData</InputType>
+      </WriteActionModuleType>
+
+      <WriteActionModuleType  Accessibility="Public" ID="HealthServicesNoHeartbeat">
+        <Configuration>
+          <xsd:element name="InMaintenance" minOccurs="0" type="xsd:integer" />
+          <xsd:element name="TimeoutSeconds"  type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="InMaintenance" ParameterType="int" Selector="$Config/InMaintenance$" />
+          <OverrideableParameter ID="TimeoutSeconds" ParameterType="int" Selector="$Config/TimeoutSeconds$" />
+        </OverrideableParameters>
+        <ModuleImplementation>
+          <Composite>
+            <MemberModules>
+              <WriteAction ID="WR" TypeID="Windows!Microsoft.Windows.PowerShellWriteAction">
+                <ScriptName>HealthServicesNoHeartbeat.ps1</ScriptName>
+                <ScriptBody>$IncludeFileContent/Scripts/HealthServicesNoHeartbeat.ps1$</ScriptBody>
+                <Parameters>
+                  <Parameter>
+                    <Name>InMM</Name>
+                    <Value>$Config/InMaintenance$</Value>
+                  </Parameter>
+                </Parameters>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </WriteAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="WR" />
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <InputType>System!System.BaseData</InputType>
+      </WriteActionModuleType>
+      
+      
+      <WriteActionModuleType Accessibility="Public" ID="HealthServicesNoPerformanceDataRecovery">
+        <Configuration>
+          <xsd:element name="TimeoutSeconds"  type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="TimeoutSeconds" ParameterType="int" Selector="$Config/TimeoutSeconds$" />
+        </OverrideableParameters>
+        <ModuleImplementation>
+          <Composite>
+            <MemberModules>
+              <WriteAction ID="WR" TypeID="Windows!Microsoft.Windows.PowerShellWriteAction">
+                <ScriptName>HealthServicesNoPerformanceData.ps1</ScriptName>
+                <ScriptBody>$IncludeFileContent/Scripts/HealthServicesNoPerformanceData.ps1$</ScriptBody>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </WriteAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="WR" />
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <InputType>System!System.BaseData</InputType>
+      </WriteActionModuleType>
+
+
+      <WriteActionModuleType  Accessibility="Public" ID="HealthServicesAnalyzeAndRepair">
+        <Configuration>
+          <xsd:element name="LastSamplesIntervalInMinutes" minOccurs="0" type="xsd:integer" />
+          <xsd:element name="TimeoutSeconds"  type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="LastSamplesIntervalInMinutes" ParameterType="int" Selector="$Config/LastSamplesIntervalInMinutes$" />
+          <OverrideableParameter ID="TimeoutSeconds" ParameterType="int" Selector="$Config/TimeoutSeconds$" />
+        </OverrideableParameters>
+        <ModuleImplementation>
+          <Composite>
+            <MemberModules>
+              <WriteAction ID="WR" TypeID="Windows!Microsoft.Windows.PowerShellWriteAction">
+                <ScriptName>GetUnhealthyAgents.ps1</ScriptName>
+                <ScriptBody>$IncludeFileContent/Scripts/HealthServicesAnalyzeAndRepair.ps1$</ScriptBody>
+                <Parameters>
+                  <Parameter>
+                    <Name>LastSamplesIntervalInMinutes</Name>
+                    <Value>$Config/LastSamplesIntervalInMinutes$</Value>
+                  </Parameter>
+                </Parameters>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </WriteAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="WR" />
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <InputType>System!System.BaseData</InputType>
+      </WriteActionModuleType>
+
+      <WriteActionModuleType Accessibility="Public" ID="HealthServiceRestartFromManagementServer">
+        <Configuration>
+          <xsd:element name="HealthServiceAgentName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="HealthServiceAgentName" Selector="$Config/HealthServiceAgentName$" ParameterType="string" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <WriteAction ID="PSScript" TypeID="Windows!Microsoft.Windows.PowerShellWriteAction">
+                <ScriptName>HealthServiceRestartFromManagementServer.ps1</ScriptName>
+                <ScriptBody>$IncludeFileContent/Scripts/HealthServiceRestartFromManagementServer.ps1$</ScriptBody>
+                <Parameters>
+                  <Parameter>
+                    <Name>HealthServiceName</Name>
+                    <Value>$Config/HealthServiceAgentName$</Value>
+                  </Parameter>
+                </Parameters>
+                <TimeoutSeconds>300</TimeoutSeconds>
+              </WriteAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="PSScript" />
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>Windows!Microsoft.Windows.SerializedObjectData</OutputType>
+        <InputType>System!System.BaseData</InputType>
+      </WriteActionModuleType>
+
+
+      <WriteActionModuleType Accessibility="Public" ID="DeleteHealthService">
+        <Configuration>
+          <xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" minOccurs="1" name="AgentName" type="xsd:string"/>
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="AgentName" Selector="$Config/AgentName$" ParameterType="string" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <WriteAction ID="PSScript" TypeID="Windows!Microsoft.Windows.PowerShellWriteAction">
+                <ScriptName>DeleteHealthService.ps1</ScriptName>
+                <ScriptBody>$IncludeFileContent/Scripts/DeleteHealthService.ps1$</ScriptBody>
+                <Parameters>
+                  <Parameter>
+                    <Name>AgentName</Name>
+                    <Value>$Config/AgentName$</Value>
+                  </Parameter>
+                </Parameters>
+                <TimeoutSeconds>300</TimeoutSeconds>
+              </WriteAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="PSScript" />
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>Windows!Microsoft.Windows.SerializedObjectData</OutputType>
+        <InputType>System!System.BaseData</InputType>
+      </WriteActionModuleType>
+
+    </ModuleTypes>
+  </TypeDefinitions>
+</ManagementPackFragment>

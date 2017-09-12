@@ -1,0 +1,56 @@
+<TemplateGroup>
+  <Instances>
+    <Instance ID="Instance20404dd4788c4b2a8acaf4580df22fc9" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.CustomTask" Version="1.0.0.0">
+      <CustomTaskConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <Accessibility>Internal</Accessibility>
+        <Id>RestartHealthServiceTask</Id>
+        <DisplayName>Restart Health Service (SCOM administration addon)</DisplayName>
+        <Description>Description for the new agent task.</Description>
+        <Target>SC!Microsoft.SystemCenter.ManagementServer</Target>
+        <Enabled>true</Enabled>
+        <Category>Maintenance</Category>
+        <Timeout>300</Timeout>
+        <Remotable>true</Remotable>
+        <ProbeActionId>PA</ProbeActionId>
+        <WriteActionId>WA</WriteActionId>
+        <WriteActionConfig>&lt;HealthServiceAgentName&gt;.&lt;/HealthServiceAgentName&gt;</WriteActionConfig>
+        <WriteActionType>HealthServiceRestartFromManagementServer</WriteActionType>
+      </CustomTaskConfig>
+    </Instance>
+    <Instance ID="Instance90034cab1985465893605a1c91f2c32b" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.CustomTask" Version="1.0.0.0">
+      <CustomTaskConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <Accessibility>Internal</Accessibility>
+        <Id>DeleteHealthServiceTask</Id>
+        <DisplayName>Delete Health Service (SCOM administration addon)</DisplayName>
+        <Description>Description for the new agent task.</Description>
+        <Target>SC!Microsoft.SystemCenter.ManagementServer</Target>
+        <Enabled>true</Enabled>
+        <Category>Maintenance</Category>
+        <Timeout>300</Timeout>
+        <Remotable>true</Remotable>
+        <ProbeActionId>PA</ProbeActionId>
+        <WriteActionId>WA</WriteActionId>
+        <WriteActionConfig>&lt;AgentName&gt;.&lt;/AgentName&gt;</WriteActionConfig>
+        <WriteActionType>DeleteHealthService</WriteActionType>
+      </CustomTaskConfig>
+    </Instance>
+    <Instance ID="Instance6b621a7848da443dbb2a0aa365398328" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.CustomTask" Version="1.0.0.0">
+      <CustomTaskConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <Accessibility>Internal</Accessibility>
+        <Id>HealthServicesPingCheckTask</Id>
+        <DisplayName>Health Services Ping Check (SCOM administration addon)</DisplayName>
+        <Description>Description for the new agent task.</Description>
+        <Target>SC!Microsoft.SystemCenter.ManagementServer</Target>
+        <Enabled>true</Enabled>
+        <Category>Maintenance</Category>
+        <Timeout>300</Timeout>
+        <Remotable>true</Remotable>
+        <ProbeActionId>PA</ProbeActionId>
+        <WriteActionId>WA</WriteActionId>
+        <WriteActionConfig>&lt;NetBIOSName&gt;.&lt;/NetBIOSName&gt;&lt;PrincipalName&gt;.&lt;/PrincipalName&gt;&lt;ManagementServerName&gt;$Target/Property[Type="SC!Microsoft.SystemCenter.HealthService"]/AuthenticationName$&lt;/ManagementServerName&gt;&lt;PingSamples&gt;3&lt;/PingSamples&gt;&lt;IntervalMilliseconds&gt;30000&lt;/IntervalMilliseconds&gt;&lt;TimeoutSeconds&gt;300&lt;/TimeoutSeconds&gt;</WriteActionConfig>
+        <WriteActionType>HealthServicesPingCheck</WriteActionType>
+        <WriteActionTarget>SC!Microsoft.SystemCenter.CollectionManagementServer</WriteActionTarget>
+      </CustomTaskConfig>
+    </Instance>
+  </Instances>
+</TemplateGroup>
