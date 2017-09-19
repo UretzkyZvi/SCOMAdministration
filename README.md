@@ -25,15 +25,8 @@ Ethereum Address: 0x6a34dab1c1e655bb1fab6279204c3eb4ea840e48
 
 ## License
 
-[License](https://github.com/uretskyzvi/SCOMAdministration/blob/master/LICENSE)
+[License](https://github.com/UretzkyZvi/SCOMAdministration/blob/master/LICENSE)
 
-## Features
-* Easy Authoring template to create and delete queries.
-* New! Support for SQL Authentication. 
-* Dedicated views in SCOM console.
-* Performance data collection.
-* Monitor using consecutive samples condition and schedule filter.
-* Grouping multiple queries into a group.
 
 # Quick Start - Usage
 Please always test new management packs in a test environment before importing to production!
@@ -43,5 +36,7 @@ Please always test new management packs in a test environment before importing t
 * Microsoft SQL Management Packs.
 * SCOM Admin rights (only Administrators can import management packs)
 ## Quick Start - Install
-1. Download [QueryOleDbMonitorSetup.msi](https://github.com/UretzkyZvi/Monitor-Applications-Using-SQL-Queries/releases/download/V2.0.0.1/QueryOleDbMonitorSetup.msi)
+1. Download [SCOMAdministrationAddOns.xml](https://github.com/UretzkyZvi/SCOMAdministration/blob/master/SCOMAdministrationAddOns/bin/Debug/SCOMAdministrationAddOns.xml)
+2. Import it in your SCOM environment/
+3. Enjoy!!
 
