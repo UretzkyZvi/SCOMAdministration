@@ -40,6 +40,13 @@ Please always test new management packs in a test environment before importing t
 
 ## Quick Start - Install
 1. Download [SCOMAdministrationAddOns.xml](https://github.com/UretzkyZvi/SCOMAdministration/blob/master/SCOMAdministrationAddOns/bin/Debug/SCOMAdministrationAddOns.xml)
-2. Import it in your SCOM environment/
+2. Import it in your SCOM environment.
 3. Enjoy!!
+
+Bouns SQL [query](https://github.com/UretzkyZvi/SCOMAdministration/blob/master/SQLAffectedAgentsPivotTable.sql) that give the answer to question which servers were affected. 
+Created to [Ziv Gad](https://www.linkedin.com/in/ziv-gad-285673145/?ppe=1) the best DBA :-)
+
+
+
+
 
