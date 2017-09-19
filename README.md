@@ -36,8 +36,8 @@ Please always test new management packs in a test environment before importing t
 
 ## Requirements
 * SCOM 2012 R2 (earlier versions are untested)
-* Microsoft SQL Management Packs.
 * SCOM Admin rights (only Administrators can import management packs)
+
 ## Quick Start - Install
 1. Download [SCOMAdministrationAddOns.xml](https://github.com/UretzkyZvi/SCOMAdministration/blob/master/SCOMAdministrationAddOns/bin/Debug/SCOMAdministrationAddOns.xml)
 2. Import it in your SCOM environment/
