@@ -19,9 +19,10 @@ If agent’s ping status is 0 then the problem is within agent, therefore, the r
 For bonus :), I create a rule to repair agents that stopped collect performance data. The rule schedule to run every 12 hours, it is executes a SQL query that return healthy agent that didn’t wrote performance data more than 12 hours.For each return agent it execute task flush agent.
 
 In the future, I will add more cool rules and tasks to this MP, So you should be updated 😊 
-If you use this MP and you like it, invite me to a coffee :-)
-Bitcoin Address: 1HPXi5M38F9zCtp1nciaGc15JdR48DrgVv
-Ethereum Address: 0x6a34dab1c1e655bb1fab6279204c3eb4ea840e48
+
+  If you use this MP and you like it, invite me to a coffee :-)
+  Bitcoin Address: 1HPXi5M38F9zCtp1nciaGc15JdR48DrgVv
+  Ethereum Address: 0x6a34dab1c1e655bb1fab6279204c3eb4ea840e48
 
 ## License
 
