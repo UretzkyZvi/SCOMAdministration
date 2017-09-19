@@ -1,22 +1,47 @@
 # SCOM Administration Add-Ons
 
-Management Pack was created by Uretzky Zvi to make daily job of SCOM administrator easier.
+Management Pack was created by Uretzky Zvi to make his daily job easier 😊.
 
-At the beginning, I have tried to solve a problem that I’m sure many of SCOM administrator’s familiar with; In every company once in a while disaster happens and the first question to be is which servers were affected from this disaster? Unfortunately, the answer to this question is not accurate, yes, I know there is a monitor “Failed to connect to computer” that raised when the agent stops sending heartbeat for 3 seconds (default) and not answer to a ping from Management Server it is a great monitor, but what about agents that had a problem before the disaster (like service is down or data corrupted or even been deleted from the server), monitor “Failed to connect to computer” won’t raise for those agents and therefore the answer to this simple question is not accurate.
+Once in awhile disaster happens and when it happens; the first question will be which servers were affected?, Unfortunately, the answer to this question is not accurate, yes, I know there is a monitor “Failed to connect to computer” that raised when the agent stops sending heartbeat for 3 seconds (default) and if it not answer Management Server send a ping to check connectivity. The issue raise when agents have a some kind of problem before the disaster such as service has been down or data was corrupted or even somehow the agent was deleted from the server). The monitor “Failed to connect to computer” will not raise for those agents. I’m sure many of SCOM administrator’s familiar with a problem.
 
-There are several solutions for this problem like checking ping 24X7 for a static list of servers.
-Personally I does not agree with this solution, this why I decided to create a new solution and it based on SQL query and ping check for only those servers that return from SQL result. 
-I will explain, I created a rule that schedule to run every 5 minutes, it is executes a query which return only agents that follow those two conditions; 1. Agent have error in heartbeat monitor (network problem, server down, HealthService stopped or HealthService data corrupted). 2. Agent is not in Maintenance Mode.
-For each agent that return from the query, I execute a check ping task from agent primary management server, task data I save in Operations Manager DB as event.
+My motivation to create this MP was to solve this problem.
 
-Now, I can write a report that will show the exact affected servers.
-After I solved this problem, I had another idea, if I know the unhealthy agent ping status why not to try repair them, so I develop another rule that schedule to run every 12 hours, it is responsible for analyze agent ping status and execute the necessary task to repair the agent. If status is 0, it means the sever answer to ping and the problem is with agent, so I will execute Restart Agent task. If status is 14, it means the ping answer was bad address, so I execute delete agent from SCOM task.
-It all fun but about agents that stopped collect performance data from not understandable reason.
-I created another rule that schedule to run every 12 hours, it executes a query to get all agents that not in MM and with heartbeat monitor ok, for each return agent I execute Flush agent task.
+My solution bases on SQL query and ping check.
 
-In the future, I will add more cool rules and tasks to this MP, so be updated 😊 
-If you use this and you like it, invite me to a coffee :-)
+I created a rule that schedule to run every 5 minutes (you can override it), it execute a query which return only agents that follow those two conditions 1. Agents with status error in heartbeat monitor (network problem, server down, HealthService stopped or HealthService data corrupted). 2. Agent is not in Maintenance Mode.
 
+For each agent that return from the query, I execute a check ping task from agent’s primary management server, the task data publish to Operations Manager DB as event. This workflow make easy to answer on the question which servers were affected. Since we have agent status in real time all the time. Now by using simple SQL query we can get all the affected agents.
+
+While I was working on this rule, I had another idea, and it was to try repair the unhealthy agent.
+
+To repair those agents I created a rule that schedule to run every 12 hours (you can override it), this rule execute SQL query and return last sample for unhealthy agents and for each of them it analyze and execute necessary task to repair it. 
+If agent’s ping status is 0 then the problem is within agent, therefore, the rule will execute the task Restart Agent. If agent’s ping status is 14 (bad address) then the problem is within SCOM environment and therefore execute the task Delete Agent from SCOM. 
+For bonus :), I create a rule to repair agents that stopped collect performance data. The rule schedule to run every 12 hours, it is executes a SQL query that return healthy agent that didn’t wrote performance data more than 12 hours.For each return agent it execute task flush agent.
+
+In the future, I will add more cool rules and tasks to this MP, So you should be updated 😊 
+If you use this MP and you like it, invite me to a coffee :-)
 Bitcoin Address: 1HPXi5M38F9zCtp1nciaGc15JdR48DrgVv
-
 Ethereum Address: 0x6a34dab1c1e655bb1fab6279204c3eb4ea840e48
+
+## License
+
+[License](https://github.com/uretskyzvi/SCOMAdministration/blob/master/LICENSE)
+
+## Features
+* Easy Authoring template to create and delete queries.
+* New! Support for SQL Authentication. 
+* Dedicated views in SCOM console.
+* Performance data collection.
+* Monitor using consecutive samples condition and schedule filter.
+* Grouping multiple queries into a group.
+
+# Quick Start - Usage
+Please always test new management packs in a test environment before importing to production!
+
+## Requirements
+* SCOM 2012 R2 (earlier versions are untested)
+* Microsoft SQL Management Packs.
+* SCOM Admin rights (only Administrators can import management packs)
+## Quick Start - Install
+1. Download [QueryOleDbMonitorSetup.msi](https://github.com/UretzkyZvi/Monitor-Applications-Using-SQL-Queries/releases/download/V2.0.0.1/QueryOleDbMonitorSetup.msi)
+
