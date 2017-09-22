@@ -46,7 +46,7 @@ Please always test new management packs in a test environment before importing t
 Bouns SQL [query](https://github.com/UretzkyZvi/SCOMAdministration/blob/master/SQLAffectedAgentsPivotTable.sql) that give the answer to question which servers were affected. 
 Example using Squared Up ![QueryUseExample](/Image/SCOMAdministrationAddOnsSquaredUpExample.png?raw=true)
 
-Created to [Ziv Gad](https://www.linkedin.com/in/ziv-gad-285673145/?ppe=1) the best DBA :-)
+Credit to [Ziv Gad](https://www.linkedin.com/in/ziv-gad-285673145/?ppe=1) the best DBA :-)
 
 
 
